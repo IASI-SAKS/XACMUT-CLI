@@ -26,7 +26,6 @@
   <version>1.0-SNAPSHOT</version>
 
   <name>XACMUT-CLI</name>
-  <!-- FIXME change it to the project's website -->
   <url>http://saks.iasi.cnr.it/tools/xacmut-cli</url>
 
   <developers>
@@ -119,7 +118,7 @@
   		  <version>1.4.0</version>
 		  <configuration>
 		  	<classpathScope>compile</classpathScope>
-    		<mainClass>it.cnr.iasi.saks.xacmut.cli.MutantsCreatorCLI</mainClass>
+    			<mainClass>it.cnr.iasi.saks.xacmut.cli.MutantsCreatorCLI</mainClass>
   		  </configuration>
 		</plugin>        
       </plugins>
