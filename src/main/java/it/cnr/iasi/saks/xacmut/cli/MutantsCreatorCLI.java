@@ -1,16 +1,3 @@
-package it.cnr.iasi.saks.xacmut.cli;
-
-import it.cnr.isti.sedc.xacml.mutator.generator.XacmlMutantGenerator;
-import it.cnr.isti.sedc.xacml.mutator.gui.MutantsGeneratorMainGui;
-import it.cnr.isti.sedc.xacml.mutator.util.Util;
-import java.io.File;
-
-import javax.swing.JCheckBox;
-
-import org.w3c.dom.Node;
-
-import org.mockito.Mockito;
-
 /* 
  * This file is part of the XACMUT-CLI project.
  * 
@@ -28,6 +15,19 @@ import org.mockito.Mockito;
  * along with GROUCHO.  If not, see <https://www.gnu.org/licenses/>
  *
  */
+package it.cnr.iasi.saks.xacmut.cli;
+
+import it.cnr.isti.sedc.xacml.mutator.generator.XacmlMutantGenerator;
+import it.cnr.isti.sedc.xacml.mutator.gui.MutantsGeneratorMainGui;
+import it.cnr.isti.sedc.xacml.mutator.util.Util;
+import java.io.File;
+
+import javax.swing.JCheckBox;
+
+import org.w3c.dom.Node;
+
+import org.mockito.Mockito;
+
 public class MutantsCreatorCLI {
 
 	private static Node goldPolicyAsDom;
