@@ -53,7 +53,6 @@ public class MutantsCreatorCLI {
 		Mockito.when(this.mockedUnflaggedCheckBox.isSelected()).thenReturn(false);
 
 		this.mockedProgressBar = Mockito.mock(JProgressBar.class);
-//		Mockito.when(this.mockedProgressBar.setIndeterminate(true));
 		this.mockedButton = Mockito.mock(JButton.class);
 		
 	}
