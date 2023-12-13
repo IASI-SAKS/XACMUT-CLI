@@ -17,12 +17,18 @@
  */
 package it.cnr.iasi.saks.xacmut.cli;
 
+import it.cnr.iasi.saks.xacmut.mutator.generator.MutantGeneratorWrapper;
+import it.cnr.isti.sedc.xacml.mutator.generator.MutantGenerator;
 import it.cnr.isti.sedc.xacml.mutator.generator.XacmlMutantGenerator;
+import it.cnr.isti.sedc.xacml.mutator.gui.MutantsGeneratorMainClass;
 import it.cnr.isti.sedc.xacml.mutator.gui.MutantsGeneratorMainGui;
 import it.cnr.isti.sedc.xacml.mutator.util.Util;
+
 import java.io.File;
 
+import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JProgressBar;
 
 import org.w3c.dom.Node;
 
@@ -30,30 +36,124 @@ import org.mockito.Mockito;
 
 public class MutantsCreatorCLI {
 
-	private static Node goldPolicyAsDom;
-	private MutantsGeneratorMainGui mainFrameGui;
-	
-	private static final String DEFAULT_POLICIES_LOCATION = "." + File.separator + "src" + File.separator + "main" + File.separator + "resources" + File.separator + "policies";
+	private JCheckBox mockedFlaggedCheckBox;
+	private JCheckBox mockedUnflaggedCheckBox;
+	private JProgressBar mockedProgressBar;
+	private JButton mockedButton;
 
-	private MutantsGeneratorMainGui createMockedGUI() {
+	private static Node goldPolicyAsDom;
+
+	private static final String DEFAULT_POLICIES_LOCATION = "." + File.separator + "src" + File.separator + "main"
+			+ File.separator + "resources" + File.separator + "policies";
+
+	public MutantsCreatorCLI() {
+		this.mockedFlaggedCheckBox = Mockito.mock(JCheckBox.class);
+		Mockito.when(this.mockedFlaggedCheckBox.isSelected()).thenReturn(true);
+		this.mockedUnflaggedCheckBox = Mockito.mock(JCheckBox.class);
+		Mockito.when(this.mockedUnflaggedCheckBox.isSelected()).thenReturn(false);
+
+		this.mockedProgressBar = Mockito.mock(JProgressBar.class);
+		this.mockedButton = Mockito.mock(JButton.class);
+		
+	}
+
+	/**
+	 * This version of the GUI supports only few mutation operators:
+	 * <ul>
+	 * <li>CPCA</li>
+	 * <li>PSTT</li>
+	 * <li>PSTF</li>
+	 * <li>CRCA</li>
+	 * <li>PTT</li>
+	 * <li>PTF</li>
+	 * <li>CRE</li>
+	 * <li>RTT</li>
+	 * <li>RTF</li>
+	 * <li>RCT</li>
+	 * <li>RCF</li>
+	 * </ul>
+	 * 
+	 * @return a Mocked version of the GUI where few mutation operators are available
+	 */
+	private MutantsGeneratorMainGui createMockedGUI_MutantsGeneratorMainGui() {
 		MutantsGeneratorMainGui mockedGUI = Mockito.mock(MutantsGeneratorMainGui.class);
 
-		JCheckBox mockedFlaggedCheckBox = Mockito.mock(JCheckBox.class);
-		Mockito.when(mockedFlaggedCheckBox.isSelected()).thenReturn(true);
-		JCheckBox mockedUnflaggedCheckBox = Mockito.mock(JCheckBox.class);
-		Mockito.when(mockedUnflaggedCheckBox.isSelected()).thenReturn(false);
+		Mockito.when(mockedGUI.getCpcaCheckBox()).thenReturn(this.mockedFlaggedCheckBox);
+		Mockito.when(mockedGUI.getPsttCheckBox()).thenReturn(this.mockedFlaggedCheckBox);
+		Mockito.when(mockedGUI.getPstfCheckBox()).thenReturn(this.mockedFlaggedCheckBox);
+		Mockito.when(mockedGUI.getCrcaCheckBox()).thenReturn(this.mockedFlaggedCheckBox);
+		Mockito.when(mockedGUI.getPttCheckBox()).thenReturn(this.mockedFlaggedCheckBox);
+		Mockito.when(mockedGUI.getPtfCheckBox()).thenReturn(this.mockedFlaggedCheckBox);
+		Mockito.when(mockedGUI.getCreCheckBox()).thenReturn(this.mockedFlaggedCheckBox);
+		Mockito.when(mockedGUI.getRttCheckBox()).thenReturn(this.mockedFlaggedCheckBox);
+		Mockito.when(mockedGUI.getRtfCheckBox()).thenReturn(this.mockedFlaggedCheckBox);
+		Mockito.when(mockedGUI.getRctCheckBox()).thenReturn(this.mockedFlaggedCheckBox);
+		Mockito.when(mockedGUI.getRcfCheckBox()).thenReturn(this.mockedFlaggedCheckBox);
 
-		Mockito.when(mockedGUI.getCpcaCheckBox()).thenReturn(mockedFlaggedCheckBox);
-		Mockito.when(mockedGUI.getPsttCheckBox()).thenReturn(mockedFlaggedCheckBox);
-		Mockito.when(mockedGUI.getPstfCheckBox()).thenReturn(mockedFlaggedCheckBox);
-		Mockito.when(mockedGUI.getCrcaCheckBox()).thenReturn(mockedFlaggedCheckBox);
-		Mockito.when(mockedGUI.getPttCheckBox()).thenReturn(mockedFlaggedCheckBox);
-		Mockito.when(mockedGUI.getPtfCheckBox()).thenReturn(mockedFlaggedCheckBox);
-		Mockito.when(mockedGUI.getCreCheckBox()).thenReturn(mockedFlaggedCheckBox);
-		Mockito.when(mockedGUI.getRttCheckBox()).thenReturn(mockedFlaggedCheckBox);
-		Mockito.when(mockedGUI.getRtfCheckBox()).thenReturn(mockedFlaggedCheckBox);
-		Mockito.when(mockedGUI.getRctCheckBox()).thenReturn(mockedFlaggedCheckBox);
-		Mockito.when(mockedGUI.getRcfCheckBox()).thenReturn(mockedFlaggedCheckBox);
+		return mockedGUI;
+	}
+
+	/**
+	 * This version of the GUI supports all the mutation operators:
+	 * <ul>
+	 * <li>CPCA</li>
+	 * <li>PSTT</li>
+	 * <li>PSTF</li>
+	 * <li>CRCA</li>
+	 * <li>PTT</li>
+	 * <li>PTF</li>
+	 * <li>CRE</li>
+	 * <li>RTT</li>
+	 * <li>RTF</li>
+	 * <li>RCT</li>
+	 * <li>RCF</li>
+	 * <li>RER</li>
+	 * <li>RPT</li>
+	 * <li>ANR</li>
+	 * <li>RUF</li>
+	 * <li>AUF</li>
+	 * <li>CLF</li>
+	 * <li>ANF</li>
+	 * <li>RNF</li>
+	 * <li>CCF</li>
+	 * <li>FPR</li>
+	 * <li>FDR</li>
+	 * <li>CNOF</li>
+	 * </ul>
+	 * 
+	 * @return a Mocked version of the GUI where all the supported mutation
+	 *         operators are enabled
+	 */
+	private MutantsGeneratorMainClass createMockedGUI_MutantsGeneratorMainClass() {
+		MutantsGeneratorMainClass mockedGUI = Mockito.mock(MutantsGeneratorMainClass.class);
+
+		Mockito.when(mockedGUI.getCpcaCheckBox()).thenReturn(this.mockedFlaggedCheckBox);
+		Mockito.when(mockedGUI.getPsttCheckBox()).thenReturn(this.mockedFlaggedCheckBox);
+		Mockito.when(mockedGUI.getPstfCheckBox()).thenReturn(this.mockedFlaggedCheckBox);
+		Mockito.when(mockedGUI.getCrcaCheckBox()).thenReturn(this.mockedFlaggedCheckBox);
+		Mockito.when(mockedGUI.getPttCheckBox()).thenReturn(this.mockedFlaggedCheckBox);
+		Mockito.when(mockedGUI.getPtfCheckBox()).thenReturn(this.mockedFlaggedCheckBox);
+		Mockito.when(mockedGUI.getCreCheckBox()).thenReturn(this.mockedFlaggedCheckBox);
+		Mockito.when(mockedGUI.getRttCheckBox()).thenReturn(this.mockedFlaggedCheckBox);
+		Mockito.when(mockedGUI.getRtfCheckBox()).thenReturn(this.mockedFlaggedCheckBox);
+		Mockito.when(mockedGUI.getRctCheckBox()).thenReturn(this.mockedFlaggedCheckBox);
+		Mockito.when(mockedGUI.getRcfCheckBox()).thenReturn(this.mockedFlaggedCheckBox);
+
+		Mockito.when(mockedGUI.getRerCheckBox()).thenReturn(this.mockedFlaggedCheckBox);
+		Mockito.when(mockedGUI.getRptCheckBox()).thenReturn(this.mockedFlaggedCheckBox);
+		Mockito.when(mockedGUI.getAnrCheckBox()).thenReturn(this.mockedFlaggedCheckBox);
+		Mockito.when(mockedGUI.getRufCheckBox()).thenReturn(this.mockedFlaggedCheckBox);
+		Mockito.when(mockedGUI.getAufCheckBox()).thenReturn(this.mockedFlaggedCheckBox);
+		Mockito.when(mockedGUI.getClfCheckBox5()).thenReturn(this.mockedFlaggedCheckBox);
+		Mockito.when(mockedGUI.getAnfCheckBox()).thenReturn(this.mockedFlaggedCheckBox);
+		Mockito.when(mockedGUI.getRnfCheckBox()).thenReturn(this.mockedFlaggedCheckBox);
+		Mockito.when(mockedGUI.getCcfCheckBox()).thenReturn(this.mockedFlaggedCheckBox);
+		Mockito.when(mockedGUI.getFprCheckBox()).thenReturn(this.mockedFlaggedCheckBox);
+		Mockito.when(mockedGUI.getFdrCheckBox()).thenReturn(this.mockedFlaggedCheckBox);
+		Mockito.when(mockedGUI.getCnofCheckBox()).thenReturn(this.mockedFlaggedCheckBox);
+
+		Mockito.when(mockedGUI.getjProgressBar()).thenReturn(this.mockedProgressBar);
+		Mockito.when(mockedGUI.getExecuteFaultDetectionButton()).thenReturn(this.mockedButton);
 
 		return mockedGUI;
 	}
@@ -63,15 +163,9 @@ public class MutantsCreatorCLI {
 
 		MutantsCreatorCLI cli = new MutantsCreatorCLI();
 
-		MutantsGeneratorMainGui gui = cli.createMockedGUI();
+//		MutantsGeneratorMainGui guiSmall = cli.createMockedGUI_MutantsGeneratorMainGui();
+		MutantsGeneratorMainClass gui = cli.createMockedGUI_MutantsGeneratorMainClass();
 
-		if (gui.getCpcaCheckBox().isSelected()) {
-			System.out.println("Selected");
-		} else {
-			System.out.println("Unselected");
-		}
-
-//		File xacmlPoliciesFile = new File("." + File.separator + "policies");
 		File xacmlPoliciesFile = new File(DEFAULT_POLICIES_LOCATION);
 		System.out.println(xacmlPoliciesFile.getAbsolutePath());
 		File[] contentDir = xacmlPoliciesFile.listFiles();
@@ -82,9 +176,17 @@ public class MutantsCreatorCLI {
 				System.out.println(goldPolicyFile.getAbsolutePath());
 				goldPolicyAsDom = Util.getFileAsDom(goldPolicyFile);
 				if (goldPolicyAsDom != null) {
-					XacmlMutantGenerator mutantsGenerator = new XacmlMutantGenerator(goldPolicyAsDom, goldPolicyFile, gui);
-//					XacmlMutantGenerator mutantsGenerator = new XacmlMutantGenerator(goldPolicyAsDom, goldPolicyFile);
-					mutantsGenerator.generates();
+//******************************************************					
+//******************************************************
+					MutantGeneratorWrapper mutantsGenerator = new MutantGeneratorWrapper(goldPolicyAsDom, goldPolicyFile, gui);
+					mutantsGenerator.executeTheMutation();
+					System.out.println("... done: "+ goldPolicyFile.getAbsolutePath());
+//******************************************************										
+//					XacmlMutantGenerator mutantsGeneratorSmall = new XacmlMutantGenerator(goldPolicyAsDom, goldPolicyFile, guiSmall);
+//					XacmlMutantGenerator mutantsGeneratorSmall = new XacmlMutantGenerator(goldPolicyAsDom, goldPolicyFile);
+//					mutantsGeneratorSmall.generates();
+//******************************************************					
+//******************************************************
 				}
 			}
 		}
